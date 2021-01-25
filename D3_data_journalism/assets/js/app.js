@@ -47,4 +47,58 @@ let xAxis = chartGroup
 .attr("transform", `translate(0, ${chartHeight})`)
 .call(bottomAxis);
 // Append y axis.
-let yAxis = chartGroup.append("g").call(leftAxis);
+      let yAxis = chartGroup.append("g").call(leftAxis);
+
+      // Set data used for circles.
+      let circlesGroup = chartGroup.selectAll("circle").data(demoData);
+      // Bind data.
+      let elemEnter = circlesGroup.enter();
+      // Create circles.
+      let circle = elemEnter
+        .append("circle")
+        .attr("cx", (d) => xLinearScale(d[chosenXAxis]))
+        .attr("cy", (d) => yLinearScale(d[chosenYAxis]))
+        .attr("r", 15)
+        .classed("stateCircle", true);
+      // Create circle text.
+      let circleText = elemEnter
+        .append("text")
+        .attr("x", (d) => xLinearScale(d[chosenXAxis]))
+        .attr("y", (d) => yLinearScale(d[chosenYAxis]))
+        .attr("dy", ".35em")
+        .text((d) => d.abbr)
+        .classed("stateText", true);
+      
+    // Update tool tip function above csv import.
+      let circlesGroup = updateToolTip(
+        chosenXAxis,
+        chosenYAxis,
+        circle,
+        circleText
+      );
+      // Add x label groups and labels.
+      var xLabelsGroup = chartGroup
+        .append("g")
+        .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+      var povertyLabel = xLabelsGroup
+        .append("text")
+        .attr("x", 0)
+        .attr("y", 20)
+        .attr("value", "poverty") // value to grab for event listener
+        .classed("active", true)
+        .text("In Poverty (%)");
+      var ageLabel = xLabelsGroup
+        .append("text")
+        .attr("x", 0)
+        .attr("y", 40)
+        .attr("value", "age") // value to grab for event listener
+        .classed("inactive", true)
+        .text("Age (Median)");
+      var incomeLabel = xLabelsGroup
+        .append("text")
+        .attr("x", 0)
+        .attr("y", 60)
+        .attr("value", "income") // value to grab for event listener
+        .classed("inactive", true)
+        .text("Household Income (Median)");
+      
